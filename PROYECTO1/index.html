@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+</head>
+<body>
+    <h1>Formulario de Registro</h1>
+    <form action="/generate-pdf" method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br>
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required><br>
+        <label for="rut">RUT:</label>
+        <input type="text" id="rut" name="rut" required><br>
+        <label for="auto">Auto:</label>
+        <input type="text" id="auto" name="auto" required><br>
+        <label for="patente">Patente:</label>
+        <input type="text" id="patente" name="patente" required><br>
+        <input type="submit" value="Generar PDF">
+    </form>
+</body>
+</html>
