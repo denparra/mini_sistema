@@ -1,10 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
-const bodyParser = require('body-parser');
-const path = require('path');
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Conexión a la base de datos MySQL en Railway
 const connection = mysql.createConnection({
@@ -22,26 +19,6 @@ connection.connect(err => {
     return;
   }
   console.log('Conectado a la base de datos MySQL en Railway');
-});
-
-// Ruta para mostrar el formulario de ingreso de personas
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML del formulario
-});
-
-// Ruta para recibir los datos del formulario e insertar en la base de datos
-app.post('/agregar-persona', (req, res) => {
-  const { nombre, apellido, edad, sexo } = req.body;
-
-  // Insertar datos en la tabla `personas`
-  const sql = 'INSERT INTO personas (nombre, apellido, edad, sexo) VALUES (?, ?, ?, ?)';
-  connection.query(sql, [nombre, apellido, edad, sexo], (err, result) => {
-    if (err) {
-      console.error('Error al insertar los datos:', err);
-      return res.status(500).send('Error al insertar los datos');
-    }
-    res.send('Persona agregada correctamente <br><a href="/">Volver</a>');
-  });
 });
 
 // Ruta para mostrar los registros de la tabla personas
@@ -79,12 +56,12 @@ app.get('/ver-personas', (req, res) => {
       `;
     });
 
-    responseHTML += '</table><br><a href="/">Volver al formulario</a>';
+    responseHTML += '</table>';
     res.send(responseHTML);
   });
 });
 
-// Iniciar el servidor en el puerto 3000
-app.listen(3000, () => {
-  console.log('Servidor corriendo en http://localhost:3000');
+// Iniciar el servidor en un puerto diferente
+app.listen(3001, () => {
+  console.log('Servidor corriendo en http://localhost:3001');
 });
