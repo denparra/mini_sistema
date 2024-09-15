@@ -2,17 +2,18 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const path = require('path');
+require('dotenv').config();  // Cargar variables de entorno desde Railway
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Conexión a la base de datos MySQL en Railway
+// Conexión a la base de datos MySQL utilizando variables de entorno
 const connection = mysql.createConnection({
-  host: 'junction.proxy.rlwy.net',  // Host público proporcionado por Railway
-  user: 'root',                     // Usuario proporcionado
-  password: 'bMSzJomEQjrxwbmQWDWflJBqGteoenlt', // Contraseña proporcionada
-  database: 'railway',              // Nombre de la base de datos
-  port: 48639                       // Puerto público proporcionado
+  host: process.env.MYSQLHOST,          // Variable de entorno para el host
+  user: process.env.MYSQLUSER,          // Variable de entorno para el usuario
+  password: process.env.MYSQLPASSWORD,  // Variable de entorno para la contraseña
+  database: process.env.MYSQLDATABASE,  // Variable de entorno para el nombre de la base de datos
+  port: process.env.MYSQLPORT || 3306   // Variable de entorno para el puerto
 });
 
 // Verificar la conexión
@@ -26,7 +27,7 @@ connection.connect(err => {
 
 // Ruta para mostrar el formulario de ingreso de personas
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML del formulario
+  res.sendFile(path.join(__dirname, 'index.html'));  // Sirve el archivo HTML del formulario
 });
 
 // Ruta para recibir los datos del formulario e insertar en la base de datos
@@ -84,7 +85,8 @@ app.get('/ver-personas', (req, res) => {
   });
 });
 
-// Iniciar el servidor en el puerto 3000
-app.listen(3000, () => {
-  console.log('Servidor corriendo en http://localhost:3000');
+// Iniciar el servidor en el puerto asignado por Railway o en el puerto 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
