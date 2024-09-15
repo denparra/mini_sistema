@@ -1,7 +1,7 @@
 {
   "name": "minisistema",
   "version": "1.0.0",
-  "description": "Sistema sencillo para gestión de personas",
+  "description": "Sistema sencillo para gestionar personas",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -2,21 +2,21 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const path = require('path');
-require('dotenv').config();  // Cargar variables de entorno desde Railway
+require('dotenv').config();  // Cargar variables de entorno automáticamente
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Conexión a la base de datos MySQL utilizando variables de entorno
 const connection = mysql.createConnection({
-  host: process.env.MYSQLHOST,          // Variable de entorno para el host
-  user: process.env.MYSQLUSER,          // Variable de entorno para el usuario
-  password: process.env.MYSQLPASSWORD,  // Variable de entorno para la contraseña
-  database: process.env.MYSQLDATABASE,  // Variable de entorno para el nombre de la base de datos
-  port: process.env.MYSQLPORT || 3306   // Variable de entorno para el puerto
+  host: process.env.MYSQLHOST,          // Utilizar variable de entorno para el host
+  user: process.env.MYSQLUSER,          // Utilizar variable de entorno para el usuario
+  password: process.env.MYSQLPASSWORD,  // Utilizar variable de entorno para la contraseña
+  database: process.env.MYSQLDATABASE,  // Utilizar variable de entorno para el nombre de la base de datos
+  port: process.env.MYSQLPORT || 3306   // Utilizar puerto 3306 como predeterminado
 });
 
-// Verificar la conexión
+// Verificar la conexión a la base de datos
 connection.connect(err => {
   if (err) {
     console.error('Error conectando a la base de datos:', err);
