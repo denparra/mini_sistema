@@ -7,13 +7,16 @@ require('dotenv').config();  // Cargar variables de entorno
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Conexión a la base de datos MySQL utilizando las variables correctas de Railway
+// Descomponer MYSQL_URL en sus partes
+const dbUrl = new URL(process.env.MYSQL_URL || 'mysql://root:bMSzJomEQjrxwbmQWDWflJBqGteoenlt@mysql.railway.internal:3306/railway');
+
+// Conexión a la base de datos MySQL utilizando la información de la URL
 const pool = mysql.createPool({
-  host: 'mysql.railway.internal',            // Host proporcionado por Railway
-  user: 'root',                              // Usuario de la base de datos (Railway)
-  password: 'bMSzJomEQjrxwbmQWDWflJBqGteoenlt', // Contraseña proporcionada por Railway
-  database: 'railway',                       // Nombre de la base de datos proporcionado por Railway
-  port: 3306,                                // Puerto de MySQL (normalmente 3306)
+  host: dbUrl.hostname,           // Host proporcionado por Railway
+  user: dbUrl.username,           // Usuario extraído de la URL
+  password: dbUrl.password,       // Contraseña extraída de la URL
+  database: dbUrl.pathname.slice(1),  // Base de datos, quitar el primer "/"
+  port: dbUrl.port || 3306,       // Puerto de MySQL (normalmente 3306)
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -94,3 +97,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
