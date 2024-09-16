@@ -2,27 +2,24 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const path = require('path');
-require('dotenv').config();  // Cargar variables de entorno
+require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Descomponer MYSQL_URL en sus partes
-const dbUrl = new URL(process.env.MYSQL_URL || 'mysql://root:bMSzJomEQjrxwbmQWDWflJBqGteoenlt@mysql.railway.internal:3306/railway');
-
-// Conexión a la base de datos MySQL utilizando la información de la URL
+// Conexión a la base de datos MySQL utilizando las variables de entorno de Railway
 const pool = mysql.createPool({
-  host: dbUrl.hostname,           // Host proporcionado por Railway
-  user: dbUrl.username,           // Usuario extraído de la URL
-  password: dbUrl.password,       // Contraseña extraída de la URL
-  database: dbUrl.pathname.slice(1),  // Base de datos, quitar el primer "/"
-  port: dbUrl.port || 3306,       // Puerto de MySQL (normalmente 3306)
+  host: process.env.MYSQLHOST,          // Host de la base de datos (Railway)
+  user: process.env.MYSQLUSER,          // Usuario de la base de datos (Railway)
+  password: process.env.MYSQLPASSWORD,  // Contraseña de la base de datos (Railway)
+  database: process.env.MYSQLDATABASE,  // Nombre de la base de datos (Railway)
+  port: process.env.MYSQLPORT || 3306,  // Puerto de MySQL
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
-// Verificar la conexión
+// Verificar la conexión a la base de datos
 pool.getConnection((err, connection) => {
   if (err) {
     console.error('Error conectando a la base de datos:', err);
@@ -37,7 +34,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML del formulario
 });
 
-// Ruta para agregar personas
+// Ruta para agregar personas (formulario de inserción)
 app.post('/agregar-persona', (req, res) => {
   const { nombre, apellido, edad, sexo } = req.body;
 
@@ -97,4 +94,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-
