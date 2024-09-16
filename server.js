@@ -7,13 +7,13 @@ require('dotenv').config();  // Cargar las variables de entorno desde el archivo
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Conexión a la base de datos MySQL utilizando las variables de entorno de Railway
+// Conexión a la base de datos MySQL utilizando las variables de entorno
 const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,          // Host de la base de datos (Railway)
-  user: process.env.MYSQLUSER,          // Usuario de la base de datos (Railway)
-  password: process.env.MYSQLPASSWORD,  // Contraseña de la base de datos (Railway)
-  database: process.env.MYSQLDATABASE,  // Nombre de la base de datos (Railway)
-  port: process.env.MYSQLPORT || 3306,  // Puerto de MySQL
+  host: process.env.MYSQLHOST,            // Utiliza el valor de MYSQLHOST desde el archivo .env
+  user: process.env.MYSQLUSER,            // Utiliza el valor de MYSQLUSER desde el archivo .env
+  password: process.env.MYSQLPASSWORD,    // Utiliza el valor de MYSQLPASSWORD desde el archivo .env
+  database: process.env.MYSQLDATABASE,    // Utiliza el valor de MYSQLDATABASE desde el archivo .env
+  port: process.env.MYSQLPORT || 3306,    // Utiliza el puerto de MySQL, por defecto 3306
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML del formulario
 });
 
-// Ruta para agregar personas (formulario de inserción)
+// Ruta para agregar personas
 app.post('/agregar-persona', (req, res) => {
   const { nombre, apellido, edad, sexo } = req.body;
 
