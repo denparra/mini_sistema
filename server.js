@@ -2,24 +2,24 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const path = require('path');
-require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
+require('dotenv').config();  // Cargar variables de entorno
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Conexión a la base de datos MySQL utilizando createPool para manejar mejor las conexiones
+// Conexión a la base de datos MySQL utilizando las variables correctas de Railway
 const pool = mysql.createPool({
-  host: process.env.MYSQLHOST || '127.0.0.1', // Asegúrate de que usa IPv4 en lugar de IPv6
-  user: process.env.MYSQLUSER,                // Usuario de la base de datos de Railway
-  password: process.env.MYSQLPASSWORD,        // Contraseña de la base de datos de Railway
-  database: process.env.MYSQLDATABASE,        // Nombre de la base de datos de Railway
-  port: process.env.MYSQLPORT || 3306,        // Puerto predeterminado para MySQL
+  host: 'mysql.railway.internal',            // Host proporcionado por Railway
+  user: 'root',                              // Usuario de la base de datos (Railway)
+  password: 'bMSzJomEQjrxwbmQWDWflJBqGteoenlt', // Contraseña proporcionada por Railway
+  database: 'railway',                       // Nombre de la base de datos proporcionado por Railway
+  port: 3306,                                // Puerto de MySQL (normalmente 3306)
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
-// Verificar la conexión a la base de datos
+// Verificar la conexión
 pool.getConnection((err, connection) => {
   if (err) {
     console.error('Error conectando a la base de datos:', err);
@@ -31,13 +31,13 @@ pool.getConnection((err, connection) => {
 
 // Ruta para servir el formulario HTML
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML
+  res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML del formulario
 });
 
 // Ruta para agregar personas
 app.post('/agregar-persona', (req, res) => {
   const { nombre, apellido, edad, sexo } = req.body;
-  
+
   // Insertar datos en la tabla `personas`
   const sql = 'INSERT INTO personas (nombre, apellido, edad, sexo) VALUES (?, ?, ?, ?)';
   pool.query(sql, [nombre, apellido, edad, sexo], (err, result) => {
@@ -52,7 +52,7 @@ app.post('/agregar-persona', (req, res) => {
 // Ruta para mostrar los registros de la tabla `personas`
 app.get('/ver-personas', (req, res) => {
   const sql = 'SELECT * FROM personas';
-  
+
   pool.query(sql, (err, results) => {
     if (err) {
       console.error('Error al consultar los datos:', err);
