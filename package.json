@@ -1,11 +1,10 @@
 {
   "name": "minisistema",
   "version": "1.0.0",
-  "description": "Sistema sencillo para gestionar personas",
+  "description": "Sistema básico para gestionar personas",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +12,6 @@
   "dependencies": {
     "express": "^4.21.0",
     "mysql2": "^3.11.2",
-    "dotenv": "^16.0.0"  // Añadido dotenv para manejar variables de entorno
+    "dotenv": "^16.0.0"
   }
 }
