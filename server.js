@@ -2,24 +2,15 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const path = require('path');
-require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
+require('dotenv').config();  // Cargar variables de entorno desde .env
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Conexión a la base de datos MySQL utilizando las variables de entorno
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,            // Utiliza el valor de MYSQLHOST desde el archivo .env
-  user: process.env.MYSQLUSER,            // Utiliza el valor de MYSQLUSER desde el archivo .env
-  password: process.env.MYSQLPASSWORD,    // Utiliza el valor de MYSQLPASSWORD desde el archivo .env
-  database: process.env.MYSQLDATABASE,    // Utiliza el valor de MYSQLDATABASE desde el archivo .env
-  port: process.env.MYSQLPORT || 3306,    // Utiliza el puerto de MySQL, por defecto 3306
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+// Conectar a MySQL utilizando la URL completa desde el archivo .env
+const pool = mysql.createPool(process.env.MYSQL_URL);
 
-// Verificar la conexión a la base de datos
+// Verificar la conexión
 pool.getConnection((err, connection) => {
   if (err) {
     console.error('Error conectando a la base de datos:', err);
@@ -31,7 +22,7 @@ pool.getConnection((err, connection) => {
 
 // Ruta para servir el formulario HTML
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html')); // Sirve el archivo HTML del formulario
+  res.sendFile(path.join(__dirname, 'index.html'));  // Sirve el archivo HTML del formulario
 });
 
 // Ruta para agregar personas
